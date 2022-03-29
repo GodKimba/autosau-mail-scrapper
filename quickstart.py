@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 import os.path
-
+from time import time
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -36,15 +36,27 @@ def main():
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
-        results = service.users().labels().list(userId="me").execute()
-        labels = results.get("labels", [])
+        # results = service.users().labels().list(userId="me").execute()
+        # labels = results.get("labels", [])
 
-        if not labels:
+        # Get Messages 
+        results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
+        messages = results.get('messages', [])
+
+
+        # if not labels:
+        message_count = int(input("How many messages do you want to see?"))
+        if not messages:
             print("No labels found.")
             return
         print("Labels:")
-        for label in labels:
-            print(label["name"])
+        # for label in labels:
+        for message in messages[:message_count]:
+            msg = service.users().messages().get(userId='me', id=message['id']).execute()
+            print(msg['snippet'])
+            print('\n')
+            time.sleep(2)
+            # print(label["name"])
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
