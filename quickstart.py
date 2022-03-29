@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/gmail.readonly", "https://www.googleapis.com/auth/gmail.labels"]
 
 
 def main():
@@ -33,22 +33,36 @@ def main():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
+    def make_label(name, mlv='show', llv='labelShow'):
+        label = {
+            'messageListVisibility': mlv,
+            'labelListVisibility': llv,
+            'name': name
+        }
+
+        return label
+
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
         results = service.users().labels().list(userId="me").execute()
-        labels = results.get("labels", [])
-
-        if not labels:
-            print("No labels found.")
-            return
-        print("Labels:")
-        for label in labels:
-            print(label["name"])
+        label = make_label('Autosau')
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
+
+    
+    try:
+        created_label = service.users().labels().create(userId='me', body=label).execute()
+        print("Label created")
+    
+    except Exception as e:
+        print(f"Error occured: {e}")
+
+
+
+
 
 
 if __name__ == "__main__":
