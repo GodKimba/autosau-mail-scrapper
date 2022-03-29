@@ -39,10 +39,11 @@ def main():
         # results = service.users().labels().list(userId="me").execute()
         # labels = results.get("labels", [])
 
-        # Get Messages 
-        results = service.users().messages().list(userId='me', labelIds=['INBOX']).execute()
-        messages = results.get('messages', [])
-
+        # Get Messages
+        results = (
+            service.users().messages().list(userId="me", labelIds=["INBOX"]).execute()
+        )
+        messages = results.get("messages", [])
 
         # if not labels:
         message_count = int(input("How many messages do you want to see?"))
@@ -52,10 +53,11 @@ def main():
         print("Labels:")
         # for label in labels:
         for message in messages[:message_count]:
-            msg = service.users().messages().get(userId='me', id=message['id']).execute()
-            print(msg['snippet'])
-            print('\n')
-            time.sleep(2)
+            msg = (
+                service.users().messages().get(userId="me", id=message["id"]).execute()
+            )
+            print(msg["snippet"])
+            print("\n")
             # print(label["name"])
 
     except HttpError as error:
