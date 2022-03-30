@@ -33,6 +33,8 @@ def main():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
+
+
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
@@ -46,18 +48,18 @@ def main():
         messages = results.get("messages", [])
 
         # if not labels:
-        message_count = int(input("How many messages do you want to see?"))
-        if not messages:
-            print("No labels found.")
-            return
-        print("Labels:")
-        # for label in labels:
-        for message in messages[:message_count]:
-            msg = (
-                service.users().messages().get(userId="me", id=message["id"]).execute()
-            )
-            print(msg["snippet"])
-            print("\n")
+        # message_count = int(input("How many messages do you want to see?"))
+        # if not messages:
+        #     print("No labels found.")
+        #     return
+        # print("Labels:")
+        # # for label in labels:
+        # for message in messages[:message_count]:
+        #     msg = (
+        #         service.users().messages().get(userId="me", id=message["id"]).execute()
+        #     )
+        print(messages[1]['id'])
+            #print("\n")
             # print(label["name"])
 
     except HttpError as error:
