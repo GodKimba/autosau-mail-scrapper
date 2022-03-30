@@ -38,8 +38,8 @@ def main():
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
-        # results = service.users().labels().list(userId="me").execute()
-        # labels = results.get("labels", [])
+        results = service.users().labels().list(userId="me").execute()
+        labels = results.get("labels", [])
 
         # Get Messages
         results = (
@@ -47,20 +47,24 @@ def main():
         )
         messages = results.get("messages", [])
 
-        # if not labels:
-        # message_count = int(input("How many messages do you want to see?"))
-        # if not messages:
-        #     print("No labels found.")
-        #     return
-        # print("Labels:")
-        # # for label in labels:
-        # for message in messages[:message_count]:
-        #     msg = (
-        #         service.users().messages().get(userId="me", id=message["id"]).execute()
-        #     )
-        print(messages[1]['id'])
-            #print("\n")
-            # print(label["name"])
+        if not labels:
+            message_count = int(input("How many messages do you want to see?"))
+        if not messages:
+            print("No labels found.")
+            return
+        print("Labels:")
+        # For function that gets the snippet of a message if it was send by 'puc-rio'
+        for message in messages[:60]:
+            msg = (
+                service.users().messages().get(userId="me", id=message["id"]).execute()
+             )
+            #print(msg['payload']['headers'])
+            if 'puc-rio' in msg['payload']['headers'][6]['value']:
+                print(msg['snippet'])
+            #print(msg['payload']['headers'][6]['value'])
+
+        autosau_address_getter = service.users().messages().list(userId='me', q='from:autosau@puc-rio.br').execute()
+        autosau_messages = autosau_address_getter.get('messages', [])
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
