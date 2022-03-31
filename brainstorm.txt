@@ -1,0 +1,20 @@
+Solutions for getting emails from autosau:
+
+- Create a filter for the autosau@puc-rio.br and then list it
+
+
+
+
+
+
+
+Obs:
+
+service.users() # Is to go to the users inbox
+
+service.users().list() # After getting into the users inbox you can call the list/filters/get/labels methods from gmail api
+
+service.users().list().execute() # You need to write the execute method after all the specification.
+
+
+The q parameter uses the gmail way of filtering: from:autosau@puc-rio.br as an example.
