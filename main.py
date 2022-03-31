@@ -123,5 +123,14 @@ def get_size_format(b, factor=1024, suffix="B"):
     return f"{b:.2f}Y{suffix}"
 
 def clean(text):
-    # Clean text for creating a folder
+    # Clean text for creating a folder, so it doesn't have any space
     return "".join(c if c.isalnum() else "-" for c in text)
+
+def parse_parts(service, parts, folder_name, message):
+    """
+    Utility function that parses the content of an email partition
+    """
+    if parts:
+        for part in parts:
+            filename = part.get("filename")
+            mimeType = part.get("mimeType")
